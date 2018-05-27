@@ -38,8 +38,8 @@ class Disassembler(): Decoder {
         sb.appendln("ser v${registerX.hex} v${registerY.hex}")
     }
 
-    override fun set(register: Int, value: Int) {
-        sb.appendln("set v${register.hex} 0x${value.hex}")
+    override fun ld(register: Int, value: Int) {
+        sb.appendln("ld v${register.hex} 0x${value.hex}")
     }
 
     override fun add(register: Int, value: Int) {
@@ -86,20 +86,20 @@ class Disassembler(): Decoder {
         sb.appendln("sner v${registerX.hex} v${registerY.hex}")
     }
 
-    override fun seti(value: Int) {
-        sb.appendln("seti 0x${value.hex}")
+    override fun ldi(value: Int) {
+        sb.appendln("ldi 0x${value.hex}")
     }
 
     override fun jpv0(value: Int) {
         sb.appendln("jpv0 0x${value.hex}")
     }
 
-    override fun rand(registerX: Int, value: Int) {
-        sb.appendln("rand v${registerX.hex} 0x${value.hex}")
+    override fun rnd(registerX: Int, value: Int) {
+        sb.appendln("rnd v${registerX.hex} 0x${value.hex}")
     }
 
-    override fun draw(registerX: Int, registerY: Int, value: Int) {
-        sb.appendln("draw v${registerX.hex} v${registerY.hex} 0x${value.hex}")
+    override fun drw(registerX: Int, registerY: Int, value: Int) {
+        sb.appendln("drw v${registerX.hex} v${registerY.hex} 0x${value.hex}")
     }
 
     override fun skey(registerX: Int) {

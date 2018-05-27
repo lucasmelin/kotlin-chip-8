@@ -8,7 +8,8 @@ fun main(args: Array<String>) {
     // Initialize CHIP-8 and load game rom into memory
     val vm = loadRom("roms/demos/Maze (alt) [David Winter, 199x].ch8")
     println(vm.memory[0x200])
-    disassemble(vm)
+    print(disassemble(vm))
+
 
     // Emulation loop cycle by cycle
 }
@@ -35,7 +36,7 @@ fun disassemble(vm: VM): String {
     return decoder.toString()
 }
 
-fun Decoder.decode(address: Int, msb: Byte, lsb: Byte) {
+fun Decoder.decode(address: Int, msb: Byte, lsb: Byte){
     val opcode = (msb.toInt() shl 8 or lsb.toInt().and(0xFF)).and(0xFFFF) // Recombine the msb and lsb
     when (msb.hi) {
     // Start matching opcodes
@@ -50,7 +51,7 @@ fun Decoder.decode(address: Int, msb: Byte, lsb: Byte) {
         0x3 -> se(msb.lo, lsb.toInt())
         0x4 -> sne(msb.lo, lsb.toInt())
         0x5 -> ser(msb.lo, lsb.toInt())
-        0x6 -> set(msb.lo, lsb.toInt())
+        0x6 -> ld(msb.lo, lsb.toInt())
         0x7 -> add(msb.lo, lsb.toInt())
         0x8 -> {
             // Get both registers
@@ -74,10 +75,10 @@ fun Decoder.decode(address: Int, msb: Byte, lsb: Byte) {
             val registerY = lsb.hi
             sner(registerX, registerY)
         }
-        0xA -> seti(address(msb, lsb))
+        0xA -> ldi(address(msb, lsb))
         0xB -> jpv0(address(msb, lsb))
-        0xC -> rand(msb.lo, lsb.toInt())
-        0xD -> draw(msb.lo, lsb.hi, lsb.lo)
+        0xC -> rnd(msb.lo, lsb.toInt())
+        0xD -> drw(msb.lo, lsb.hi, lsb.lo)
         0xE -> {
             when (lsb.toInt() or 0xFF) {
                 0x9E -> skey(msb.lo)
