@@ -33,13 +33,14 @@ fun disassemble(vm: VM): String {
         val lsb = vm.memory[address + 1]
         // Increment the pc by 2 for every executed opcode
         // If skip, increase pc by 4
-        vm.pc += 2
-        decoder.decode(address, msb, lsb, vm)
+        decoder.decode(address, msb, lsb)
     }
     return decoder.toString()
 }
 
-fun Decoder.decode(address: Int, msb: Byte, lsb: Byte, vm: VM){
+
+
+fun Decoder.decode(address: Int, msb: Byte, lsb: Byte){
     // Recombine the msb and lsb. msb << 8 | lsb
     val opcode = (msb.toInt() shl 8 or lsb.toInt().and(0xFF)).and(0xFFFF)
     when (msb.hi) {
