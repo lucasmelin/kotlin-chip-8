@@ -30,15 +30,20 @@ fun disassemble(vm: VM): String {
     for (address in 0x200..(0x200+vm.romSize - 1) step 2){
         val msb = vm.memory[address]
         val lsb = vm.memory[address + 1]
-        decode(decoder, address, msb, lsb)
+        decoder.decode(address, msb, lsb)
     }
     return decoder.toString()
 }
 
-fun decode(decoder: Decoder, address: Int, msb: Byte, lsb: Byte){
+fun Decoder.decode(address: Int, msb: Byte, lsb: Byte){
     val opcode = (msb.toInt() shl 8 or lsb.toInt().and(0xFF)).and(0xFFFF) // Recombine the msb and lsb
     when (msb.hi){
         // Start matching opcodes
+            0x0 -> {
+                when (msb.toInt() shl 8 or lsb.toInt()) {
+                    0x00E0 -> cls()
+                }
+            }
     }
 }
 
