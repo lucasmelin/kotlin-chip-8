@@ -1,4 +1,5 @@
 interface Decoder {
+    fun unknown(opcode: Int, address: Int) // Print opcode and address
     fun sys(address: Int) // 0NNN: Execute machine language subroutine at address NNN
     fun cls() // 00E0: Clear the screen
     fun ret() // 00EE: Return from a subroutine
@@ -16,15 +17,15 @@ interface Decoder {
     fun addr(registerX: Int, registerY: Int) // 8XY4: Add the value of register VY to register VX. Set VF to 01 if a carry occurs or 00 if a carry does not occur
     fun sub(registerX: Int, registerY: Int) // 8XY5: Subtract the value of register VY from register VX. Set VF to 00 if a borrow occurs or 01 if a borrow does not occur
     fun shr(registerY: Int) // 8XY6: Store the value of register VY shifted right one bit in register VX. Set VF to the lsb before shift
-    fun subt(registerX: Int, registerY: Int) // 8XY7: Set the register VX to the value of VY minus VX. Set VF to 00 if a borrow occurs or 01 if a borrow does not occur
+    fun subn(registerX: Int, registerY: Int) // 8XY7: Set the register VX to the value of VY minus VX. Set VF to 00 if a borrow occurs or 01 if a borrow does not occur
     fun shl(registerY: Int) // 8XYE: Store the value of register VY shifted left one bit in register VX. Set VF to the msb before shift
     fun sner(registerX: Int, registerY: Int) // 9XY0: Skip if VX is not equal to VY
     fun ldi(value: Int) // ANNN: Store memore address NNN in register I
     fun jpv0(value: Int) // BNNN: Jump to address NNN + V0
     fun rnd(registerX: Int, value: Int) // CXNN: Set VX to a random number with a mask of NN
     fun drw(registerX: Int, registerY: Int, value: Int) // DXYN: Draw a sprite at position VX, VY with N bytes of sprite data starting at I. Set VF 01 if any ld pixels are changed to unset, 00 otherwise
-    fun skey(registerX: Int) // EX9E: Skip if the key corresponding to the hex value in VX is pressed
-    fun snkey(registerX: Int) // EXA1: Skip if the key corresponding to the hex value in VX is not pressed
+    fun skp(registerX: Int) // EX9E: Skip if the key corresponding to the hex value in VX is pressed
+    fun sknp(registerX: Int) // EXA1: Skip if the key corresponding to the hex value in VX is not pressed
     fun getdelay(registerX: Int) // FX07: Store the current value of the delay timer in VX
     fun waitkey(registerX: Int) // FX0A: Wait for a keypress and store the result in VX
     fun setdelay(registerX: Int) // FX15: Set the delay timer to the value of register VX

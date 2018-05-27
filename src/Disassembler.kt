@@ -1,9 +1,13 @@
-class Disassembler(): Decoder {
+class Disassembler() : Decoder {
 
     private val sb = StringBuilder()
 
     override fun toString(): String {
         return sb.toString()
+    }
+
+    override fun unknown(opcode: Int, address: Int){
+        sb.append("unknown op:0x${opcode.hex} 0x${address.hex}")
     }
 
     override fun sys(address: Int) {
@@ -16,6 +20,7 @@ class Disassembler(): Decoder {
 
     override fun ret() {
         sb.appendln("ret")
+        //vm.pc = vm.stack[--vm.sc]
     }
 
     override fun jp(address: Int) {
@@ -74,8 +79,8 @@ class Disassembler(): Decoder {
         sb.appendln("shr v${registerY.hex}")
     }
 
-    override fun subt(registerX: Int, registerY: Int) {
-        sb.appendln("subt v${registerX.hex} v${registerY.hex}")
+    override fun subn(registerX: Int, registerY: Int) {
+        sb.appendln("subn v${registerX.hex} v${registerY.hex}")
     }
 
     override fun shl(registerY: Int) {
@@ -102,12 +107,12 @@ class Disassembler(): Decoder {
         sb.appendln("drw v${registerX.hex} v${registerY.hex} 0x${value.hex}")
     }
 
-    override fun skey(registerX: Int) {
-        sb.appendln("skey v${registerX.hex}")
+    override fun skp(registerX: Int) {
+        sb.appendln("skp v${registerX.hex}")
     }
 
-    override fun snkey(registerX: Int) {
-        sb.appendln("snkey v${registerX.hex}")
+    override fun sknp(registerX: Int) {
+        sb.appendln("sknp v${registerX.hex}")
     }
 
     override fun getdelay(registerX: Int) {
@@ -145,7 +150,6 @@ class Disassembler(): Decoder {
     override fun pop(registerX: Int) {
         sb.appendln("pop v0-v${registerX.hex}")
     }
-
 
 
 }

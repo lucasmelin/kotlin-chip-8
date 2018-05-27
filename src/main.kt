@@ -31,19 +31,24 @@ fun disassemble(vm: VM): String {
     for (address in 0x200..(0x200 + vm.romSize - 1) step 2) {
         val msb = vm.memory[address]
         val lsb = vm.memory[address + 1]
-        decoder.decode(address, msb, lsb)
+        // Increment the pc by 2 for every executed opcode
+        // If skip, increase pc by 4
+        vm.pc += 2
+        decoder.decode(address, msb, lsb, vm)
     }
     return decoder.toString()
 }
 
-fun Decoder.decode(address: Int, msb: Byte, lsb: Byte){
-    val opcode = (msb.toInt() shl 8 or lsb.toInt().and(0xFF)).and(0xFFFF) // Recombine the msb and lsb
+fun Decoder.decode(address: Int, msb: Byte, lsb: Byte, vm: VM){
+    // Recombine the msb and lsb. msb << 8 | lsb
+    val opcode = (msb.toInt() shl 8 or lsb.toInt().and(0xFF)).and(0xFFFF)
     when (msb.hi) {
-    // Start matching opcodes
+        // Check the first nibble to determine opcode
         0x0 -> {
             when (msb.toInt() shl 8 or lsb.toInt()) {
                 0x00E0 -> cls()
                 0x00EE -> ret()
+                else -> unknown(opcode, address)
             }
         }
         0x1 -> jp(address(msb, lsb))
@@ -65,8 +70,9 @@ fun Decoder.decode(address: Int, msb: Byte, lsb: Byte){
                 0x4 -> addr(registerX, registerY)
                 0x5 -> sub(registerX, registerY)
                 0x6 -> shr(registerY)
-                0x7 -> subt(registerX, registerY)
+                0x7 -> subn(registerX, registerY)
                 0xE -> shl(registerY)
+                else -> unknown(opcode, address)
             }
         }
         0x9 -> {
@@ -81,8 +87,9 @@ fun Decoder.decode(address: Int, msb: Byte, lsb: Byte){
         0xD -> drw(msb.lo, lsb.hi, lsb.lo)
         0xE -> {
             when (lsb.toInt() or 0xFF) {
-                0x9E -> skey(msb.lo)
-                0xA1 -> snkey(msb.lo)
+                0x9E -> skp(msb.lo)
+                0xA1 -> sknp(msb.lo)
+                else -> unknown(opcode, address)
             }
         }
         0xF -> {
@@ -97,9 +104,12 @@ fun Decoder.decode(address: Int, msb: Byte, lsb: Byte){
                 0x33 -> bcd(register)
                 0x55 -> push(register)
                 0x65 -> pop(register)
+                else -> unknown(opcode, address)
             }
         }
+        else -> unknown(opcode, address)
     }
+
 }
 
 val Byte.i: Int get() = this.toInt()
