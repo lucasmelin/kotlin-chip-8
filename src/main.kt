@@ -1,7 +1,6 @@
 import java.io.BufferedInputStream
 import java.io.DataInputStream
 import java.io.FileInputStream
-import kotlin.reflect.jvm.internal.impl.types.DisjointKeysUnionTypeSubstitution
 
 fun main(args: Array<String>) {
     //Set up render system
@@ -36,8 +35,11 @@ fun disassemble(vm: VM): String {
     return decoder.toString()
 }
 
-fun decode(msb: Byte, lsb: Byte){
-    TODO()
+fun decode(decoder: Decoder, address: Int, msb: Byte, lsb: Byte){
+    val opcode = (msb.toInt() shl 8 or lsb.toInt().and(0xFF)).and(0xFFFF) // Recombine the msb and lsb
+    when (msb.hi){
+        // Start matching opcodes
+    }
 }
 
 val Byte.i: Int get() = this.toInt()
