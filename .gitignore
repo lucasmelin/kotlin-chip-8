@@ -27,3 +27,11 @@ hs_err_pid*
 *.iml
 
 out/production/kotlin-chip-8/META-INF/kotlin-chip-8\.kotlin_module
+
+\.gradle/vcsWorkingDirs/
+
+\.gradle/4\.7/fileHashes/
+
+\.gradle/4\.7/fileChanges/
+
+build/kotlin-build/version\.txt
