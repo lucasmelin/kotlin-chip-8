@@ -53,7 +53,50 @@ fun Decoder.decode(address: Int, msb: Byte, lsb: Byte) {
         0x6 -> set(msb.lo, lsb.toInt())
         0x7 -> add(msb.lo, lsb.toInt())
         0x8 -> {
-
+            // Get both registers
+            val registerX = msb.lo
+            val registerY = lsb.hi
+            when (lsb.lo){
+                0x0 -> setr(registerX, registerY)
+                0x1 -> or(registerX, registerY)
+                0x2 -> and(registerX, registerY)
+                0x3 -> xor(registerX, registerY)
+                0x4 -> addr(registerX, registerY)
+                0x5 -> sub(registerX, registerY)
+                0x6 -> shr(registerY)
+                0x7 -> subt(registerX, registerY)
+                0xE -> shl(registerY)
+            }
+        }
+        0x9 -> {
+            // Get both registers
+            val registerX = msb.lo
+            val registerY = lsb.hi
+            sner(registerX, registerY)
+        }
+        0xA -> seti(address(msb, lsb))
+        0xB -> jpv0(address(msb, lsb))
+        0xC -> rand(msb.lo, lsb.toInt())
+        0xD -> draw(msb.lo, lsb.hi, lsb.lo)
+        0xE -> {
+            when (lsb.toInt() or 0xFF) {
+                0x9E -> skey(msb.lo)
+                0xA1 -> snkey(msb.lo)
+            }
+        }
+        0xF -> {
+            val register = msb.lo
+            when (lsb.toInt() or 0xFF){
+                0x07 -> getdelay(register)
+                0x0A -> waitkey(register)
+                0x15 -> setdelay(register)
+                0x18 -> setsound(register)
+                0x1E -> addi(register)
+                0x29 -> spritei(register)
+                0x33 -> bcd(register)
+                0x55 -> push(register)
+                0x65 -> pop(register)
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ interface Decoder {
     fun shr(registerY: Int) // 8XY6: Store the value of register VY shifted right one bit in register VX. Set VF to the lsb before shift
     fun subt(registerX: Int, registerY: Int) // 8XY7: Set the register VX to the value of VY minus VX. Set VF to 00 if a borrow occurs or 01 if a borrow does not occur
     fun shl(registerY: Int) // 8XYE: Store the value of register VY shifted left one bit in register VX. Set VF to the msb before shift
-    fun sner(registerX: Int, registerY: Int) // 9XY0: Skip if VX is not eqial to VY
+    fun sner(registerX: Int, registerY: Int) // 9XY0: Skip if VX is not equal to VY
     fun seti(value: Int) // ANNN: Store memore address NNN in register I
     fun jpv0(value: Int) // BNNN: Jump to address NNN + V0
     fun rand(registerX: Int, value: Int) // CXNN: Set VX to a random number with a mask of NN
