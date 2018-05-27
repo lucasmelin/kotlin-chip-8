@@ -31,7 +31,7 @@ interface Decoder {
     fun setsound(registerX: Int) // FX18: Set the sound timer to the value of register VX
     fun addi(registerX: Int) // FX1E: Add the value stored in register VX to register VX
     fun spritei(registerX: Int) // FX29: Set i to the memory address of the sprite data corresponding to the hexadecimal digit stored in register VX
-    fun bcd(registerX: Int) // FX33: Storedthe binary-coded decimal equivalent of the value stored in register VX at addresses I, I+1 and I+2
+    fun bcd(registerX: Int) // FX33: Store the binary-coded decimal equivalent of the value stored in register VX at addresses I, I+1 and I+2
     fun push(registerX: Int) // FX55: Store the values of registers V0 to VX inclusive in memory starting at address I. I is set to I+X+1 after the operation
     fun pop(registerX: Int) // FX65: Fill registers V0 to VX inclusive with the values stored in memory starting at address I. I is set to I + X + 1 after the operation
 }

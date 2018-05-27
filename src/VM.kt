@@ -8,5 +8,5 @@ data class VM (
         var sc: Int = 0, // Stack counter
         var delay: Int = 0, // Delay timer
         var sound: Int = 0, // Sound timer
-var romSize: Int = 0 // Size of the loaded rom
+        var romSize: Int = 0 // Size of the loaded rom
 )

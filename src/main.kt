@@ -16,8 +16,8 @@ fun main(args: Array<String>) {
 fun loadRom(file: String): VM {
     // Open the rom in binary mode
     return DataInputStream(BufferedInputStream(FileInputStream(file))).use {
-        val state = VM()
         val rom = it.readBytes()
+        val state = VM(romSize = rom.size)
         // Copy the entire rom array into state.memory starting the program counter
         System.arraycopy(rom, 0, state.memory, state.pc, rom.size)
         state
