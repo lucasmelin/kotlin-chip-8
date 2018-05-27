@@ -25,10 +25,10 @@ data class VM (
         /* 16-bit program counter, only the first 12 bits are used
         Points to the current operation. Starts at 0x200
          */
-        val pc: Int = 0x200,
+        var pc: Int = 0x200,
         /* Points to the next free slot in the stack
          */
-        val sc: Int = 0,
+        var sc: Int = 0,
         /* Used to delay events
          */
         val delay: Int = 0,
