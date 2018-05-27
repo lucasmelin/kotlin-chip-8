@@ -30,6 +30,6 @@ out/production/kotlin-chip-8/META-INF/kotlin-chip-8\.kotlin_module
 
 \.gradle
 
-build/kotlin-build/version\.txt
+build
 
 *.lock
