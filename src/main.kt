@@ -1,10 +1,17 @@
 import java.io.BufferedInputStream
 import java.io.DataInputStream
 import java.io.FileInputStream
+import kotlin.reflect.jvm.internal.impl.types.DisjointKeysUnionTypeSubstitution
 
 fun main(args: Array<String>) {
+    //Set up render system
+
+    // Initialize CHIP-8 and load game rom into memory
     val vm = loadRom("roms/demos/Maze (alt) [David Winter, 199x].ch8")
     println(vm.memory[0x200])
+    disassemble(vm)
+
+    // Emulation loop cycle by cycle
 }
 
 fun loadRom(file: String): VM {
@@ -17,3 +24,24 @@ fun loadRom(file: String): VM {
         state
     }
 }
+
+// Disassemble the entire rom in memory
+fun disassemble(vm: VM): String {
+    val decoder = Disassembler()
+    for (address in 0x200..(0x200+vm.romSize - 1) step 2){
+        val msb = vm.memory[address]
+        val lsb = vm.memory[address + 1]
+        decode(decoder, address, msb, lsb)
+    }
+    return decoder.toString()
+}
+
+fun decode(msb: Byte, lsb: Byte){
+    TODO()
+}
+
+val Byte.i: Int get() = this.toInt()
+val Byte.lo: Int get() = this.i and 0xF // Bitmask to get low byte
+val Byte.hi: Int get() = (this.i and 0xF0) shr 4 // Bitmask and shift to get the high byte
+val Byte.hex: String get() = Integer.toHexString(this.i)
+val Int.hex: String get() = Integer.toHexString(this)

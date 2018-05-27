@@ -7,5 +7,6 @@ data class VM (
         var pc: Int = 0x200, // Program counter, starts at 0x200
         var sc: Int = 0, // Stack counter
         var delay: Int = 0, // Delay timer
-        var sound: Int = 0 // Sound timer
+        var sound: Int = 0, // Sound timer
+var romSize: Int = 0 // Size of the loaded rom
 )
