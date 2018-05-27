@@ -27,4 +27,11 @@ interface Decoder {
     fun snkey(registerX: Int) // EXA1: Skip if the key corresponding to the hex value in VX is not pressed
     fun getdelay(registerX: Int) // FX07: Store the current value of the delay timer in VX
     fun waitkey(registerX: Int) // FX0A: Wait for a keypress and store the result in VX
+    fun setdelay(registerX: Int) // FX15: Set the delay timer to the value of register VX
+    fun setsound(registerX: Int) // FX18: Set the sound timer to the value of register VX
+    fun addi(registerX: Int) // FX1E: Add the value stored in register VX to register VX
+    fun spritei(registerX: Int) // FX29: Set i to the memory address of the sprite data corresponding to the hexadecimal digit stored in register VX
+    fun bcd(registerX: Int) // FX33: Storedthe binary-coded decimal equivalent of the value stored in register VX at addresses I, I+1 and I+2
+    fun push(registerX: Int) // FX55: Store the values of registers V0 to VX inclusive in memory starting at address I. I is set to I+X+1 after the operation
+    fun pop(registerX: Int) // FX65: Fill registers V0 to VX inclusive with the values stored in memory starting at address I. I is set to I + X + 1 after the operation
 }
