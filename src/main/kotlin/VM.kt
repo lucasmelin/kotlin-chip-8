@@ -21,7 +21,7 @@ data class VM (
         /* 16-bit address register, only the first 12 bits are used
         Points to a specific location in memory
          */
-        val I: Int = 0,
+        var I: Int = 0,
         /* 16-bit program counter, only the first 12 bits are used
         Points to the current operation. Starts at 0x200
          */
@@ -31,9 +31,9 @@ data class VM (
         var sc: Int = 0,
         /* Used to delay events
          */
-        val delay: Int = 0,
+        var delay: Int = 0,
         /* Used to delay sounds
          */
-        val sound: Int = 0, // Sound timer
+        var sound: Int = 0, // Sound timer
         val romSize: Int = 0 // Size of the loaded rom
 )

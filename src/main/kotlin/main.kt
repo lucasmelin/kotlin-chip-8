@@ -1,6 +1,8 @@
 import java.io.BufferedInputStream
 import java.io.DataInputStream
 import java.io.FileInputStream
+import kotlin.experimental.and
+import kotlin.experimental.xor
 
 fun main(args: Array<String>) {
     //Set up render system
@@ -18,8 +20,8 @@ fun main(args: Array<String>) {
 
 fun VM.runrom() {
     // Fetch the opcode at the program counter position
-    val msb = vm.memory[vm.pc]
-    val lsb = vm.memory[vm.pc + 1]
+    val msb = memory[pc]
+    val lsb = memory[pc + 1]
 
     when (msb.hi) {
     // Check the first nibble to determine opcode
@@ -46,58 +48,80 @@ fun VM.runrom() {
         0x7 -> { // add NN to VX
             registers[msb.lo] = registers[msb.lo] + lsb.toInt()
             pc += 2
-            println("add ${lsb.toInt} to v${msb.lo}")
+            println("add ${lsb.toInt()} to v${msb.lo}")
         }
         0x8 -> {
             // Get both registers
             val registerX = msb.lo
             val registerY = lsb.hi
             when (lsb.lo){
-                0x0 -> setr(registerX, registerY)
-                0x1 -> or(registerX, registerY)
-                0x2 -> and(registerX, registerY)
-                0x3 -> xor(registerX, registerY)
-                0x4 -> addr(registerX, registerY)
-                0x5 -> sub(registerX, registerY)
-                0x6 -> shr(registerY)
-                0x7 -> subn(registerX, registerY)
-                0xE -> shl(registerY)
-                else -> unknown(opcode, address)
+                0x0 -> TODO() //setr(registerX, registerY)
+                0x1 -> TODO() //or(registerX, registerY)
+                0x2 -> TODO() //and(registerX, registerY)
+                0x3 -> TODO() //xor(registerX, registerY)
+                0x4 -> TODO() //addr(registerX, registerY)
+                0x5 -> TODO() //sub(registerX, registerY)
+                0x6 -> TODO() //shr(registerY)
+                0x7 -> TODO() //subn(registerX, registerY)
+                0xE -> TODO() //shl(registerY)
+                else -> TODO() //unknown(opcode, address)
             }
         }
         0x9 -> {
             // Get both registers
             val registerX = msb.lo
             val registerY = lsb.hi
-            sner(registerX, registerY)
+            TODO() //sner(registerX, registerY)
         }
-        0xA -> ldi(address(msb, lsb))
-        0xB -> jpv0(address(msb, lsb))
-        0xC -> rnd(msb.lo, lsb.toInt())
-        0xD -> drw(msb.lo, lsb.hi, lsb.lo)
+        0xA -> { // ldi
+            I = address(msb, lsb)
+            pc += 2
+            println("I set to ${address(msb, lsb)}")
+        }
+        0xB -> TODO() //jpv0(address(msb, lsb))
+        0xC -> TODO() //rnd(msb.lo, lsb.toInt())
+        0xD -> { // drw
+            registers[0xF] = 0
+            // lsb.lo is height
+            for (y in 0..(lsb.lo - 1)){
+                val line = memory[I + y]
+                for (x in 0..7){
+                    val pixel = (line and ((0x80 shr x).toByte())).toInt()
+                    if (pixel != 0){
+                        val totalX = msb.lo + x
+                        val totalY = lsb.hi + y
+                        val index = totalY * 64 + totalX
+                        if (display[index].toInt() == 1) {
+                            registers[0xF] = 1
+                        }
+                        display[index] xor 1
+                    }
+                }
+            }
+        }
         0xE -> {
             when (lsb.toInt() or 0xFF) {
-                0x9E -> skp(msb.lo)
-                0xA1 -> sknp(msb.lo)
-                else -> unknown(opcode, address)
+                0x9E -> TODO() //skp(msb.lo)
+                0xA1 -> TODO() //sknp(msb.lo)
+                else -> TODO() //unknown(opcode, address)
             }
         }
         0xF -> {
             val register = msb.lo
             when (lsb.toInt() or 0xFF){
-                0x07 -> getdelay(register)
-                0x0A -> waitkey(register)
-                0x15 -> setdelay(register)
-                0x18 -> setsound(register)
-                0x1E -> addi(register)
-                0x29 -> spritei(register)
-                0x33 -> bcd(register)
-                0x55 -> push(register)
-                0x65 -> pop(register)
-                else -> unknown(opcode, address)
+                0x07 -> TODO() //getdelay(register)
+                0x0A -> TODO() //waitkey(register)
+                0x15 -> TODO() //setdelay(register)
+                0x18 -> TODO() //setsound(register)
+                0x1E -> TODO() //addi(register)
+                0x29 -> TODO() //spritei(register)
+                0x33 -> TODO() //bcd(register)
+                0x55 -> TODO() //push(register)
+                0x65 -> TODO() //pop(register)
+                else -> TODO() //unknown(opcode, address)
             }
         }
-        else -> unknown(opcode, address)
+        else -> TODO() //unknown(opcode, address)
     }
 
 }
