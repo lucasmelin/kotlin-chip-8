@@ -2,6 +2,7 @@ import java.io.BufferedInputStream
 import java.io.DataInputStream
 import java.io.FileInputStream
 import kotlin.experimental.and
+import kotlin.experimental.or
 import kotlin.experimental.xor
 
 fun main(args: Array<String>) {
@@ -23,30 +24,43 @@ fun VM.runrom() {
     val msb = memory[pc]
     val lsb = memory[pc + 1]
 
-    when (msb.hi) {
-    // Check the first nibble to determine opcode
+    when (msb.hi) { // Check the first nibble to determine opcode
         0x0 -> {
             when (msb.toInt() shl 8 or lsb.toInt()) {
                 0x00E0 -> TODO() //cls()
                 0x00EE -> TODO() //ret()
             }
         }
-        0x1 -> TODO() //jp(address(msb, lsb))
+        0x1 -> {//jp(address(msb, lsb))
+            pc = address(msb, lsb)
+        }
         0x2 -> { // call
             stack[sc] = pc
             sc++
             pc = address(msb, lsb)
         }
-        0x3 -> TODO() //se(msb.lo, lsb.toInt())
-        0x4 -> TODO() //sne(msb.lo, lsb.toInt())
-        0x5 -> TODO() //ser(msb.lo, lsb.toInt())
+        0x3 -> { //se(msb.lo, lsb.toInt())
+            if (registers[msb.lo] == lsb){
+                pc += 2
+            }
+        }
+        0x4 -> {//sne(msb.lo, lsb.toInt())
+            if (registers[msb.lo] != lsb){
+                pc += 2
+            }
+        }
+        0x5 -> {//ser(msb.lo, lsb.toInt())
+            if(registers[msb.lo] == registers[lsb.hi]){
+                pc += 2
+            }
+        }
         0x6 -> { // ld VX to NN
-            registers[msb.lo] = lsb.toInt()
+            registers[msb.lo] = lsb
             pc += 2
-            println("ld v${msb.lo} with ${lsb.toInt}")
+            println("ld v${msb.lo} with $lsb")
         }
         0x7 -> { // add NN to VX
-            registers[msb.lo] = registers[msb.lo] + lsb.toInt()
+            registers[msb.lo] = registers[msb.lo] and lsb
             pc += 2
             println("add ${lsb.toInt()} to v${msb.lo}")
         }
@@ -55,10 +69,18 @@ fun VM.runrom() {
             val registerX = msb.lo
             val registerY = lsb.hi
             when (lsb.lo){
-                0x0 -> TODO() //setr(registerX, registerY)
-                0x1 -> TODO() //or(registerX, registerY)
-                0x2 -> TODO() //and(registerX, registerY)
-                0x3 -> TODO() //xor(registerX, registerY)
+                0x0 -> {//setr(registerX, registerY)
+                    registers[registerX] = registers[registerY]
+                }
+                0x1 -> {//or(registerX, registerY)
+                    registers[registerX] or registers[registerY]
+                }
+                0x2 ->{//and(registerX, registerY)
+                    registers[registerX] and registers[registerY]
+                }
+                0x3 -> {//xor(registerX, registerY)
+                    registers[registerX] xor registers[registerY]
+                }
                 0x4 -> TODO() //addr(registerX, registerY)
                 0x5 -> TODO() //sub(registerX, registerY)
                 0x6 -> TODO() //shr(registerY)
