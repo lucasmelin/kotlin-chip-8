@@ -1,4 +1,4 @@
-data class VM (
+data class VM(
         /* 4kb of 8-bit memory
          Fontset begins at 0x50
          Program begins at 0x200
